@@ -12,4 +12,11 @@
 
 .table-container {
   width: 70vw;
+  padding: 10px;
+}
+
+.form-container {
+  width: 70vw;
+  margin: auto;
+  padding: 10px;
 }

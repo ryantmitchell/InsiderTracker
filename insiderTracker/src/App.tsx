@@ -1,6 +1,9 @@
 import Navbar from "react-bootstrap/Navbar";
 import './App.css'
 import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 
 function App() {
   return (
@@ -10,6 +13,22 @@ function App() {
                 Insider Trading Tracker
             </Navbar.Brand>
         </Navbar>
+
+        <Container className="form-container">
+            <Form>
+                <Row>
+                    <Col xs={7}>
+                        <img
+                            src="../public/search.png"
+                            alt="search icon"
+                        />
+                    </Col>
+                    <Col xs={7}>
+                        <Form.Control placeholder="Ticker" />
+                    </Col>
+                </Row>
+            </Form>
+        </Container>
 
         <Container className="d-flex justify-content-center align-items-center table-container">
             <table className="table table-striped table-bordered">
