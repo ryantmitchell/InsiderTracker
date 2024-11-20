@@ -1,33 +1,44 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import Navbar from "react-bootstrap/Navbar";
 import './App.css'
+import Container from "react-bootstrap/Container";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+        <Navbar fixed="top" bg="dark" data-bs-theme="dark">
+            <Navbar.Brand>
+                Insider Trading Tracker
+            </Navbar.Brand>
+        </Navbar>
+
+        <Container className="d-flex justify-content-center align-items-center table-container">
+            <table className="table table-striped table-bordered">
+                <thead className="table-dark">
+                    <tr>
+                        <th scope="col">Ticker</th>
+                        <th scope="col">Buy/Sell</th>
+                        <th scope="col">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">AMZN</th>
+                    <td>Buy</td>
+                    <td>1 morbillion</td>
+                </tr>
+                <tr>
+                    <th scope="row">MSFT</th>
+                    <td>Sell</td>
+                    <td>three</td>
+                </tr>
+                <tr>
+                    <th scope="row">BLAH</th>
+                    <td>Sell</td>
+                    <td>four</td>
+                </tr>
+                </tbody>
+            </table>
+        </Container>
     </>
   )
 }
