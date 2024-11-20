@@ -1,7 +1,6 @@
 #root {
   margin: 0 auto;
   padding: 2rem;
-  text-align: center;
 }
 
 .navbar {
@@ -13,10 +12,13 @@
 .table-container {
   width: 70vw;
   padding: 10px;
+  text-align: center;
 }
 
 .form-container {
   width: 70vw;
-  margin: auto;
   padding: 10px;
+  background: darkgray;
 }
+
+
