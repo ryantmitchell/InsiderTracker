@@ -1,12 +1,7 @@
 CREATE DATABASE IF NOT EXISTS insidertracker;
-CREATE USER 'QueryPotter'@'%' IDENTIFIED BY 'yurt';
-GRANT ALL PRIVILEGES ON insidertracker.* TO 'QueryPotter'@'%';
-FLUSH PRIVILEGES;
+
 USE insidertracker;
 
-CREATE TABLE GOOBER(
-
-);
 
 CREATE TABLE SUBMISSION (
                             ACCESSION_NUMBER VARCHAR(25) NOT NULL PRIMARY KEY,
