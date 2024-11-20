@@ -1,3 +1,7 @@
+CREATE DATABASE IF NOT EXISTS insidertracker;
+
+USE insidertracker;
+
 CREATE TABLE SUBMISSION (
                             ACCESSION_NUMBER VARCHAR(25) NOT NULL PRIMARY KEY,
                             FILING_DATE DATE NOT NULL,
