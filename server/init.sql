@@ -1,6 +1,12 @@
 CREATE DATABASE IF NOT EXISTS insidertracker;
-
+CREATE USER 'QueryPotter'@'%' IDENTIFIED BY 'yurt';
+GRANT ALL PRIVILEGES ON insidertracker.* TO 'QueryPotter'@'%';
+FLUSH PRIVILEGES;
 USE insidertracker;
+
+CREATE TABLE GOOBER(
+
+);
 
 CREATE TABLE SUBMISSION (
                             ACCESSION_NUMBER VARCHAR(25) NOT NULL PRIMARY KEY,
@@ -37,7 +43,7 @@ CREATE TABLE REPORTINGOWNER (
 
 CREATE TABLE NONDERIV_TRANS (
                                 ACCESSION_NUMBER VARCHAR(25) NOT NULL,
-                                NONDERIV_TRANS_SK NUMBER(38) NOT NULL PRIMARY KEY,
+                                NONDERIV_TRANS_SK BIGINT NOT NULL PRIMARY KEY,
                                 SECURITY_TITLE VARCHAR(60) NOT NULL,
                                 SECURITY_TITLE_FN VARCHAR(150) NULL,
                                 TRANS_DATE DATE NOT NULL,
@@ -50,15 +56,15 @@ CREATE TABLE NONDERIV_TRANS (
                                 EQUITY_SWAP_TRANS_CD_FN VARCHAR(150) NULL,
                                 TRANS_TIMELINESS VARCHAR(1) NULL,
                                 TRANS_TIMELINESS_FN VARCHAR(150) NULL,
-                                TRANS_SHARES NUMBER(16,2) NULL,
+                                TRANS_SHARES DECIMAL(16,2) NULL,
                                 TRANS_SHARES_FN VARCHAR(150) NULL,
-                                TRANS_PRICEPERSHARE NUMBER(16,2) NULL,
+                                TRANS_PRICEPERSHARE DECIMAL(16,2) NULL,
                                 TRANS_PRICEPERSHARE_FN VARCHAR(150) NULL,
                                 TRANS_ACQUIRED_DISP_CD VARCHAR(1) NOT NULL,
                                 TRANS_ACQUIRED_DISP_CD_FN VARCHAR(150) NULL,
-                                SHRS_OWND_FOLWNG_TRANS NUMBER(16,2) NULL,
+                                SHRS_OWND_FOLWNG_TRANS DECIMAL(16,2) NULL,
                                 SHRS_OWND_FOLWNG_TRANS_FN VARCHAR(150) NULL,
-                                VALU_OWND_FOLWNG_TRANS NUMBER(16,2) NULL,
+                                VALU_OWND_FOLWNG_TRANS DECIMAL(16,2) NULL,
                                 VALU_OWND_FOLWNG_TRANS_FN VARCHAR(150) NULL,
                                 DIRECT_INDIRECT_OWNERSHIP VARCHAR(5) NOT NULL,
                                 DIRECT_INDIRECT_OWNERSHIP_FN VARCHAR(150) NULL,
@@ -68,14 +74,14 @@ CREATE TABLE NONDERIV_TRANS (
 
 CREATE TABLE NONDERIV_HOLDING (
                                   ACCESSION_NUMBER VARCHAR(25) NOT NULL,
-                                  NONDERIV_HOLDING_SK NUMBER(38) NOT NULL PRIMARY KEY,
+                                  NONDERIV_HOLDING_SK BIGINT NOT NULL PRIMARY KEY,
                                   SECURITY_TITLE VARCHAR(60) NOT NULL,
                                   SECURITY_TITLE_FN VARCHAR(150) NULL,
                                   TRANS_FORM_TYPE VARCHAR(1) NULL,
                                   TRANS_FORM_TYPE_FN VARCHAR(150) NULL,
-                                  SHRS_OWND_FOLWNG_TRANS NUMBER(16,2) NULL,
+                                  SHRS_OWND_FOLWNG_TRANS DECIMAL(16,2) NULL,
                                   SHRS_OWND_FOLWNG_TRANS_FN VARCHAR(150) NULL,
-                                  VALU_OWND_FOLWNG_TRANS NUMBER(16,2) NULL,
+                                  VALU_OWND_FOLWNG_TRANS DECIMAL(16,2) NULL,
                                   VALU_OWND_FOLWNG_TRANS_FN VARCHAR(150) NULL,
                                   DIRECT_INDIRECT_OWNERSHIP VARCHAR(5) NOT NULL,
                                   DIRECT_INDIRECT_OWNERSHIP_FN VARCHAR(150) NULL,
@@ -85,10 +91,10 @@ CREATE TABLE NONDERIV_HOLDING (
 
 CREATE TABLE DERIV_TRANS (
                              ACCESSION_NUMBER VARCHAR(25) NOT NULL,
-                             DERIV_TRANS_SK NUMBER(38) NOT NULL PRIMARY KEY,
+                             DERIV_TRANS_SK BIGINT NOT NULL PRIMARY KEY,
                              SECURITY_TITLE VARCHAR(60) NOT NULL,
                              SECURITY_TITLE_FN VARCHAR(150) NULL,
-                             CONV_EXERCISE_PRICE NUMBER(16,2) NULL,
+                             CONV_EXERCISE_PRICE DECIMAL(16,2) NULL,
                              CONV_EXERCISE_PRICE_FN VARCHAR(150) NULL,
                              TRANS_DATE DATE NOT NULL,
                              TRANS_DATE_FN VARCHAR(150) NULL,
@@ -100,11 +106,11 @@ CREATE TABLE DERIV_TRANS (
                              EQUITY_SWAP_TRANS_CD_FN VARCHAR(150) NULL,
                              TRANS_TIMELINESS VARCHAR(1) NULL,
                              TRANS_TIMELINESS_FN VARCHAR(150) NULL,
-                             TRANS_SHARES NUMBER(16,2) NULL,
+                             TRANS_SHARES DECIMAL(16,2) NULL,
                              TRANS_SHARES_FN VARCHAR(150) NULL,
-                             TRANS_TOTAL_VALUE NUMBER(16,2) NULL,
+                             TRANS_TOTAL_VALUE DECIMAL(16,2) NULL,
                              TRANS_TOTAL_VALUE_FN VARCHAR(150) NULL,
-                             TRANS_PRICEPERSHARE NUMBER(16,2) NULL,
+                             TRANS_PRICEPERSHARE DECIMAL(16,2) NULL,
                              TRANS_PRICEPERSHARE_FN VARCHAR(150) NULL,
                              TRANS_ACQUIRED_DISP_CD VARCHAR(1) NOT NULL,
                              TRANS_ACQUIRED_DISP_CD_FN VARCHAR(150) NULL,
@@ -114,13 +120,13 @@ CREATE TABLE DERIV_TRANS (
                              EXPIRATION_DATE_FN VARCHAR(150) NULL,
                              UNDLYNG_SEC_TITLE VARCHAR(50) NOT NULL,
                              UNDLYNG_SEC_TITLE_FN VARCHAR(150) NULL,
-                             UNDLYNG_SEC_SHARES NUMBER(16,2) NOT NULL,
+                             UNDLYNG_SEC_SHARES DECIMAL(16,2) NOT NULL,
                              UNDLYNG_SEC_SHARES_FN VARCHAR(150) NULL,
-                             UNDLYNG_SEC_VALUE NUMBER(16,2) NULL,
+                             UNDLYNG_SEC_VALUE DECIMAL(16,2) NULL,
                              UNDLYNG_SEC_VALUE_FN VARCHAR(150) NULL,
-                             SHRS_OWND_FOLWNG_TRANS NUMBER(16,2) NULL,
+                             SHRS_OWND_FOLWNG_TRANS DECIMAL(16,2) NULL,
                              SHRS_OWND_FOLWNG_TRANS_FN VARCHAR(150) NULL,
-                             VALU_OWND_FOLWNG_TRANS NUMBER(16,2) NULL,
+                             VALU_OWND_FOLWNG_TRANS DECIMAL(16,2) NULL,
                              VALU_OWND_FOLWNG_TRANS_FN VARCHAR(150) NULL,
                              DIRECT_INDIRECT_OWNERSHIP VARCHAR(5) NOT NULL,
                              DIRECT_INDIRECT_OWNERSHIP_FN VARCHAR(150) NULL,
@@ -130,10 +136,10 @@ CREATE TABLE DERIV_TRANS (
 
 CREATE TABLE DERIV_HOLDING (
                                ACCESSION_NUMBER VARCHAR(25) NOT NULL,
-                               DERIV_HOLDING_SK NUMBER(38) NOT NULL PRIMARY KEY,
+                               DERIV_HOLDING_SK BIGINT NOT NULL PRIMARY KEY,
                                SECURITY_TITLE VARCHAR(60) NOT NULL,
                                SECURITY_TITLE_FN VARCHAR(150) NULL,
-                               CONV_EXERCISE_PRICE NUMBER(16,2) NULL,
+                               CONV_EXERCISE_PRICE DECIMAL(16,2) NULL,
                                CONV_EXERCISE_PRICE_FN VARCHAR(150) NULL,
                                TRANS_FORM_TYPE VARCHAR(1) NULL,
                                TRANS_FORM_TYPE_FN VARCHAR(150) NULL,
@@ -143,13 +149,13 @@ CREATE TABLE DERIV_HOLDING (
                                EXPIRATION_DATE_FN VARCHAR(150) NULL,
                                UNDLYNG_SEC_TITLE VARCHAR(20) NOT NULL,
                                UNDLYNG_SEC_TITLE_FN VARCHAR(150) NULL,
-                               UNDLYNG_SEC_SHARES NUMBER(16,2) NULL,
+                               UNDLYNG_SEC_SHARES DECIMAL(16,2) NULL,
                                UNDLYNG_SEC_SHARES_FN VARCHAR(150) NULL,
-                               UNDLYNG_SEC_VALUE NUMBER(16,2) NULL,
+                               UNDLYNG_SEC_VALUE DECIMAL(16,2) NULL,
                                UNDLYNG_SEC_VALUE_FN VARCHAR(150) NULL,
-                               SHRS_OWND_FOLWNG_TRANS NUMBER(16,2) NULL,
+                               SHRS_OWND_FOLWNG_TRANS DECIMAL(16,2) NULL,
                                SHRS_OWND_FOLWNG_TRANS_FN VARCHAR(150) NULL,
-                               VALU_OWND_FOLWNG_TRANS NUMBER(16,2) NULL,
+                               VALU_OWND_FOLWNG_TRANS DECIMAL(16,2) NULL,
                                VALU_OWND_FOLWNG_TRANS_FN VARCHAR(150) NULL,
                                DIRECT_INDIRECT_OWNERSHIP VARCHAR(5) NOT NULL,
                                DIRECT_INDIRECT_OWNERSHIP_FN VARCHAR(150) NULL,
@@ -158,14 +164,14 @@ CREATE TABLE DERIV_HOLDING (
 );
 
 CREATE TABLE transaction (
-                             transaction_id NUMBER(38) PRIMARY KEY,
+                             transaction_id BIGINT PRIMARY KEY,
                              ticker_symbol VARCHAR(10) NOT NULL,
                              owner VARCHAR(150) NOT NULL,
-                             shares NUMBER(16,2) NOT NULL,
+                             shares DECIMAL(16,2) NOT NULL,
                              transaction_type VARCHAR(20) NOT NULL,
                              transaction_date DATE NOT NULL,
-                             price_per_share NUMBER(16,2) NOT NULL,
-                             total_value NUMBER(16,2) NOT NULL,
+                             price_per_share DECIMAL(16,2) NOT NULL,
+                             total_value DECIMAL(16,2) NOT NULL,
                              ownership_type VARCHAR(20) NOT NULL,
                              remarks VARCHAR(2000)
 );

@@ -15,16 +15,17 @@ services:
   database:
     image: mysql:8
     restart: always
+    container_name: database-1
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: Insiderdata
+      MYSQL_DATABASE: insidertracker
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
       - insider_data:/var/lib/mysql
-      - ./init:/docker-entrypoint-initdb.d
+      - ./server/init.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
   insider_data: {}
