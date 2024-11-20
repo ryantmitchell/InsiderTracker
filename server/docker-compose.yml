@@ -26,6 +26,7 @@ services:
     volumes:
       - insider_data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./my.cnf:/etc/mysql/my.cnf
 
 volumes:
   insider_data: {}
