@@ -5,15 +5,34 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import {Button} from "react-bootstrap";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import axios from "axios";
 
 function App() {
     const [searchedTicker, setSearchedTicker] = useState('');
+    const [fetchedData, setFetchedData] = useState([]);
+    const [bsFilter, setBsFilter] = useState('');
+    const [showClear, setShowClear] = useState(false);
 
     const search = async (event: React.FormEvent) => {
         console.log(searchedTicker);
-        setSearchedTicker("");
+        setShowClear(true);
     }
+
+    const clearFilter = () => {
+        setSearchedTicker("");
+        setBsFilter("");
+        setShowClear(false);
+    }
+
+    const fetchAPI = async () => {
+        const response = await axios.get("http://localhost:8080/api")
+        setFetchedData(response.data.fruits);
+    }
+
+    useEffect(() => {
+        fetchAPI();
+    }, []);
 
   return (
     <>
@@ -25,11 +44,11 @@ function App() {
 
         <Container className="content-container">
             <Container className="form-container">
-                <Form onSubmit={search}>
+                <Form>
                     <Row className="align-items-center">
                         <Col xs={1}>
                             <img
-                                src="../public/search.png"
+                                src="/search.png"
                                 alt="search icon"
                                 style={{ width: '30px', height: '30px' }}
                             />
@@ -42,14 +61,24 @@ function App() {
                             />
                         </Col>
                         <Col xs={2}>
-                            <Form.Control placeholder="Buy/Sell"
-                                          onChange={(e) => {
-                                              setSearchedTicker(e.target.value)}}
-                                          value={searchedTicker}
-                            />
+                            <Form.Select
+                                onChange={(e) => setBsFilter(e.target.value)}
+                                value={bsFilter}
+                            >
+                                <option value="">Buy and Sell</option>
+                                <option value="Buy">Buy</option>
+                                <option value="Sell">Sell</option>
+                            </Form.Select>
                         </Col>
-                        <Col xs={3}>
-                            <Button type="submit" className="bg-dark border-black">Submit</Button>
+                        <Col xs={5}>
+                            <Button onClick={search} className="bg-dark border-black">Submit</Button>
+                        </Col>
+                        <Col xs={2}>
+                            {showClear && (
+                                <Button onClick={clearFilter} className="bg-danger border-black">
+                                    Clear Search
+                                </Button>
+                                )}
                         </Col>
                     </Row>
                 </Form>
@@ -66,21 +95,13 @@ function App() {
                         </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <th scope="row">AMZN</th>
-                        <td>Buy</td>
-                        <td>1 morbillion</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">MSFT</th>
-                        <td>Sell</td>
-                        <td>three</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">BLAH</th>
-                        <td>Sell</td>
-                        <td>four</td>
-                    </tr>
+                        {fetchedData.map((row, index) => (
+                            <tr key={index}>
+                                <td>{row[0]}</td>
+                                <td>{row[1]}</td>
+                                <td>{row[2]}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </Container>
