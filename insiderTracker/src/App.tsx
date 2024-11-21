@@ -127,7 +127,7 @@ function App() {
           </Container>
 
           <Container className="d-flex justify-content-center align-items-center table-container">
-              <Table className="table table-striped table-bordered">
+              <Table className="table table-bordered">
                   <thead className="table-dark">
                   <tr>
                       <th style={{width: 100}} scope="col">Ticker</th>
@@ -140,8 +140,9 @@ function App() {
                   </thead>
                   <tbody>
                   {currentTransactions.map((transaction, index) => (
-                      <tr key={index}>
-                          <td>{transaction.ticker_symbol}</td>
+                      <tr key={index}
+                          className={transaction.transaction_type === 'BUY' ? 'table-success' : 'table-danger'}>
+                          <td>{transaction.ticker_symbol.toUpperCase()}</td>
                           <td>{transaction.owner.replace(/\b\w/g, char => char.toUpperCase()).replace(/\B\w/g, char => char.toLowerCase())}</td>
                           <td>{transaction.transaction_type}</td>
                           <td>{parseInt(transaction.shares)}</td>
