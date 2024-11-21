@@ -21,4 +21,12 @@
   background: darkgray;
 }
 
+span {
+  padding: 0px 28px;
+}
+
+table {
+  table-layout: fixed;
+}
+
 

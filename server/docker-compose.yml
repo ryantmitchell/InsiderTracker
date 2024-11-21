@@ -14,6 +14,7 @@ services:
 
   database:
     image: mysql:8
+    command: ["mysqld", "--mysql-native-password=ON"]
     restart: always
     container_name: database-1
     environment:
