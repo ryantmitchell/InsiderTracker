@@ -68,6 +68,11 @@ function App() {
 
     const totalPages = Math.ceil(transactions.length / transactionsPerPage);
 
+    const dollar = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+
   return (
       <>
           <Navbar fixed="top" bg="dark" data-bs-theme="dark">
@@ -137,10 +142,10 @@ function App() {
                   {currentTransactions.map((transaction, index) => (
                       <tr key={index}>
                           <td>{transaction.ticker_symbol}</td>
-                          <td>{transaction.owner}</td>
+                          <td>{transaction.owner.replace(/\b\w/g, char => char.toUpperCase()).replace(/\B\w/g, char => char.toLowerCase())}</td>
                           <td>{transaction.transaction_type}</td>
                           <td>{parseInt(transaction.shares)}</td>
-                          <td>{transaction.total_value}</td>
+                          <td>{dollar.format(transaction.total_value)}</td>
                           <td>{transaction.transaction_date}</td>
                       </tr>
                   ))}

@@ -20,7 +20,7 @@ app.get("/api", (req, res) => {
 
 app.get('/transactions', async (req, res) => {
     try {
-        const [rows] = await db.query('SELECT * FROM transaction');
+        const [rows] = await db.query('SELECT * FROM (SELECT *, STR_TO_DATE(transaction_date, \'%d-%b-%Y\') AS formatted_date FROM transaction) AS transactions WHERE formatted_date > \'2024-06-13\' ORDER BY formatted_date DESC');
         res.json(rows);
     } catch (error) {
         console.error('Error fetching transactions:', error);
@@ -31,7 +31,7 @@ app.get('/transactions', async (req, res) => {
 app.get('/transactionSearch', async (req, res) => {
     const { searchedTicker, bsFilter } = req.query;
 
-    let query = 'SELECT * FROM transaction WHERE 1=1';
+    let query = 'SELECT * FROM (SELECT *, STR_TO_DATE(transaction_date, \'%d-%b-%Y\') AS formatted_date FROM transaction) AS transactions WHERE 1=1 AND formatted_date > \'2024-06-13\'';
     let params = [];
 
     if (searchedTicker) {
@@ -44,6 +44,8 @@ app.get('/transactionSearch', async (req, res) => {
     } else if (bsFilter === 'Sell') {
         query += ' AND transaction_type = "SELL"';
     }
+
+    query += ' ORDER BY formatted_date DESC';
 
     try {
         const [rows] = await db.query(query, params);
