@@ -19,7 +19,7 @@ function App() {
     const [transactionsPerPage] = useState(10);
 
     const search = async (event: React.FormEvent) => {
-        if (searchedTicker === '') {
+        if (searchedTicker === '' && bsFilter === '') {
             clearFilter();
         } else {
             const response = await axios.get("http://localhost:8080/transactionSearch", {
