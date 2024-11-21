@@ -159,7 +159,7 @@ CREATE TABLE DERIV_HOLDING (
 );
 
 CREATE TABLE transaction (
-                             transaction_id BIGINT PRIMARY KEY,
+                             transaction_id VARCHAR(25) PRIMARY KEY,
                              ticker_symbol VARCHAR(10) NOT NULL,
                              owner VARCHAR(150) NOT NULL,
                              shares DECIMAL(16,2) NOT NULL,
