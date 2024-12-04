@@ -14,13 +14,30 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
+const sortMappings = {
+    "Date": "formatted_date",
+    "Ticker": "ticker_symbol",
+    "Value": "total_value",
+    "Shares": "shares"
+};
+
 app.get("/api", (req, res) => {
-    res.json({"fruits": [["AMZN", "Buy", "1 morbillion"], ["MSFT", "Sell", "three"]] });
+    res.json({ "fruits": [["AMZN", "Buy", "1 morbillion"], ["MSFT", "Sell", "three"]] });
 });
 
 app.get('/transactions', async (req, res) => {
+    let sortBy = sortMappings[req.query.sortBy] || 'formatted_date';
+
     try {
-        const [rows] = await db.query('SELECT * FROM (SELECT *, STR_TO_DATE(transaction_date, \'%d-%b-%Y\') AS formatted_date FROM transaction) AS transactions WHERE formatted_date > \'2024-06-13\' ORDER BY formatted_date DESC');
+        const [rows] = await db.query(`
+            SELECT * 
+            FROM (
+                SELECT *, STR_TO_DATE(transaction_date, '%d-%b-%Y') AS formatted_date 
+                FROM transaction
+            ) AS transactions
+            WHERE formatted_date > '2024-06-13'
+            ORDER BY ${sortBy} DESC
+        `);
         res.json(rows);
     } catch (error) {
         console.error('Error fetching transactions:', error);
@@ -30,9 +47,17 @@ app.get('/transactions', async (req, res) => {
 
 app.get('/transactionSearch', async (req, res) => {
     const { searchedTicker, bsFilter } = req.query;
+    let sortBy = sortMappings[req.query.sortBy] || 'formatted_date';
 
-    let query = 'SELECT * FROM (SELECT *, STR_TO_DATE(transaction_date, \'%d-%b-%Y\') AS formatted_date FROM transaction) AS transactions WHERE 1=1 AND formatted_date > \'2024-06-13\'';
-    let params = [];
+    let query = `
+        SELECT * 
+        FROM (
+            SELECT *, STR_TO_DATE(transaction_date, '%d-%b-%Y') AS formatted_date 
+            FROM transaction
+        ) AS transactions
+        WHERE formatted_date > '2024-06-13'
+    `;
+    const params = [];
 
     if (searchedTicker) {
         query += ' AND ticker_symbol = ?';
@@ -45,7 +70,7 @@ app.get('/transactionSearch', async (req, res) => {
         query += ' AND transaction_type = "SELL"';
     }
 
-    query += ' ORDER BY formatted_date DESC';
+    query += ` ORDER BY ${sortBy} DESC`;
 
     try {
         const [rows] = await db.query(query, params);
@@ -56,8 +81,6 @@ app.get('/transactionSearch', async (req, res) => {
     }
 });
 
-
 app.listen(8080, () => {
     console.log("Server started on port 8080");
 });
-

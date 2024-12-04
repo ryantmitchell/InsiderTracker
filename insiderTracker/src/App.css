@@ -22,6 +22,21 @@
   background: darkgray;
 }
 
+.content-container {
+  position: sticky;
+}
+
+.sortIconDown {
+  cursor: pointer;
+  width: 15px;
+}
+
+.sortIconUp {
+  cursor: pointer;
+  width: 15px;
+  rotate: 180deg;
+}
+
 span {
   padding: 0px 28px;
 }

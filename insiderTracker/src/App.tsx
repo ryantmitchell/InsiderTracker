@@ -11,41 +11,41 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 
 function App() {
-    const [searchedTicker, setSearchedTicker] = useState('');
+    const [filters, setFilters] = useState({
+        searchedTicker: '',
+        bsFilter: '',
+    });
+    const [sortBy, setSortBy] = useState('Date');
     const [transactions, setTransactions] = useState([]);
-    const [bsFilter, setBsFilter] = useState('');
-    const [showClear, setShowClear] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
     const [transactionsPerPage] = useState(10);
+    const [currentPage, setCurrentPage] = useState(1);
 
     const search = async (event: React.FormEvent) => {
-        if (searchedTicker === '' && bsFilter === '') {
-            clearFilter();
-        } else {
-            const response = await axios.get("http://localhost:8080/transactionSearch", {
-                params: {
-                    searchedTicker: searchedTicker,
-                    bsFilter: bsFilter
-                }
-            })
-            setTransactions(response.data);
-            setShowClear(true);
-            setCurrentPage(1);
-        }
-    }
+        event.preventDefault();
+        fetchTransactions();
+    };
 
-    const clearFilter = () => {
-        fetchAPI();
-        setSearchedTicker("");
-        setBsFilter("");
-        setShowClear(false);
+    const clearFilters = () => {
+        setFilters({
+            searchedTicker: '',
+            bsFilter: '',
+        });
+        fetchTransactions();
         setCurrentPage(1);
     }
 
-    const fetchAPI = async () => {
-        const response = await axios.get("http://localhost:8080/transactions")
-        setTransactions(response.data);
-    }
+    const fetchTransactions = async () => {
+        const { searchedTicker, bsFilter } = filters;
+        try {
+            const endpoint = searchedTicker || bsFilter ? "/transactionSearch" : "/transactions";
+            const response = await axios.get(`http://localhost:8080${endpoint}`, {
+                params: { ...filters, sortBy },
+            });
+            setTransactions(response.data);
+        } catch (error) {
+            console.error("Error fetching transactions:", error);
+        }
+    };
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === 'Enter') {
@@ -55,8 +55,19 @@ function App() {
     };
 
     useEffect(() => {
-        fetchAPI();
-    }, []);
+        fetchTransactions();
+    }, [sortBy]);
+
+    const handleSortChange = (value) => {
+        setSortBy(value);
+    };
+
+    const handleFilterChange = (key, value) => {
+        setFilters((prevFilters) => ({
+            ...prevFilters,
+            [key]: value,
+        }));
+    };
 
     const indexOfLastTransaction = currentPage * transactionsPerPage;
     const indexOfFirstTransaction = indexOfLastTransaction - transactionsPerPage;
@@ -83,46 +94,43 @@ function App() {
 
           <Container className="content-container">
               <Container className="form-container">
-                  <Form>
+                  <Form onSubmit={search}>
                       <Row className="align-items-center">
-                          <Col xs={1}>
-                              <img
-                                  src="/search.png"
-                                  alt="search icon"
-                                  style={{width: '30px', height: '30px'}}
-                              />
-                          </Col>
                           <Col xs={2}>
-                              <Form.Control placeholder="Ticker"
-                                            onChange={(e) => {
-                                                setSearchedTicker(e.target.value)
-                                            }}
-                                            value={searchedTicker}
-                                            onKeyDown={handleKeyDown}
+                              <Form.Control
+                                  placeholder="Ticker"
+                                  onChange={(e) => handleFilterChange('searchedTicker', e.target.value)}
+                                  value={filters.searchedTicker}
                               />
                           </Col>
                           <Col xs={2}>
                               <Form.Select
-                                  onChange={(e) => setBsFilter(e.target.value)}
-                                  value={bsFilter}
+                                  onChange={(e) => handleFilterChange('bsFilter', e.target.value)}
+                                  value={filters.bsFilter}
                               >
                                   <option value="">Buy and Sell</option>
                                   <option value="Buy">Buy</option>
                                   <option value="Sell">Sell</option>
                               </Form.Select>
                           </Col>
-                          <Col xs={5}>
-                              <Button onClick={search} className="bg-dark border-black">Submit</Button>
+                          <Col xs={1}>
+                              <Button type="submit" className="bg-dark border-black">Submit</Button>
                           </Col>
+                          <Col><Button type="submit" onClick={clearFilters} className="bg-danger border-black">Clear Filter</Button></Col>
                           <Col xs={2}>
-                              {showClear && (
-                                  <Button onClick={clearFilter} className="bg-danger border-black">
-                                      Clear Search
-                                  </Button>
-                              )}
+                              <Form.Select
+                                  onChange={(e) => handleSortChange(e.target.value)}
+                                  value={sortBy}
+                              >
+                                  <option value="Date">Date</option>
+                                  <option value="Ticker">Ticker</option>
+                                  <option value="Value">Value</option>
+                                  <option value="Shares">Shares</option>
+                              </Form.Select>
                           </Col>
                       </Row>
                   </Form>
+
               </Container>
           </Container>
 
@@ -130,9 +138,9 @@ function App() {
               <Table className="table table-bordered">
                   <thead className="table-dark">
                   <tr>
-                      <th style={{width: 100}} scope="col">Ticker</th>
+                      <th style={{width: 150}} scope="col">Ticker</th>
                       <th scope="col">Owner</th>
-                      <th style={{width: 100}} scope="col">Buy/Sell</th>
+                      <th style={{width: 75}} scope="col">Buy/Sell</th>
                       <th scope="col"># Of Shares</th>
                       <th scope="col">Total Value</th>
                       <th scope="col">Date</th>
