@@ -23,18 +23,13 @@
 }
 
 .content-container {
-  position: sticky;
+  top: 50px;
+  position: relative;
 }
 
-.sortIconDown {
-  cursor: pointer;
-  width: 15px;
-}
-
-.sortIconUp {
-  cursor: pointer;
-  width: 15px;
-  rotate: 180deg;
+.chart-container {
+  position: relative;
+  top: 25px;
 }
 
 span {
@@ -43,6 +38,14 @@ span {
 
 table {
   table-layout: fixed;
+  position: relative;
+  top:50px;
+}
+
+.page-container {
+  position: relative;
+  top:40px;
+  padding-bottom: 30px;
 }
 
 

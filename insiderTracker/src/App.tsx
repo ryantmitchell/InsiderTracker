@@ -5,11 +5,10 @@ import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
-import Pagination from "react-bootstrap/Pagination";
 import Table from "react-bootstrap/Table";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis, Label } from "recharts";
 
 function App() {
     const [filters, setFilters] = useState({
@@ -20,10 +19,19 @@ function App() {
     const [transactions, setTransactions] = useState([]);
     const [transactionsPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
+    const [isFiltered, setIsFiltered] = useState(false);
 
     const search = async (event: React.FormEvent) => {
         event.preventDefault();
+        console.log(filters.bsFilter)
+        console.log(filters.searchedTicker)
         fetchTransactions();
+        if (filters.searchedTicker) {
+            setIsFiltered(true);
+        } else {
+            setIsFiltered(false);
+        }
+        setCurrentPage(1);
     };
 
     const clearFilters = () => {
@@ -32,6 +40,7 @@ function App() {
             bsFilter: '',
         });
         fetchTransactions();
+        setIsFiltered(false);
         setCurrentPage(1);
     }
 
@@ -48,12 +57,6 @@ function App() {
         }
     };
 
-    const handleKeyDown = (event: React.KeyboardEvent) => {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            search(event);
-        }
-    };
 
     useEffect(() => {
         fetchTransactions();
@@ -91,20 +94,17 @@ function App() {
         transactions.forEach((t) => {
             const transactionDate = new Date(t.transaction_date);
 
-            // Calculate the start of the week (Sunday)
             const weekStart = new Date(transactionDate);
-            weekStart.setHours(0, 0, 0, 0); // Reset time to midnight
+            weekStart.setHours(0, 0, 0, 0);
             weekStart.setDate(transactionDate.getDate() - transactionDate.getDay());
 
-            const key = weekStart.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+            const key = weekStart.toISOString().split('T')[0];
 
-            // Initialize if key doesn't exist
             if (!grouped[key]) {
                 grouped[key] = { date: key, Buy: 0, Sell: 0 };
             }
 
-            // Aggregate Buy/Sell counts
-            const transactionType = t.transaction_type.toLowerCase(); // Normalize casing
+            const transactionType = t.transaction_type.toLowerCase();
             if (transactionType === 'buy') {
                 grouped[key].Buy += parseInt(t.shares, 10) || 0;
             } else if (transactionType === 'sell') {
@@ -167,22 +167,44 @@ function App() {
                 </Container>
             </Container>
 
-            <Container className="d-flex justify-content-center align-items-center my-4">
+            {isFiltered &&
+            <Container className="chart-container d-flex justify-content-center align-items-center my-4">
                 <BarChart
                     width={800}
                     height={400}
                     data={weeklyData}
-                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                    margin={{ top: 20, right: 30, left: 40, bottom: 0 }}
                 >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="date" />
-                    <YAxis />
+                    <XAxis dataKey="date">
+                        <Label
+                            style={{
+                                textAnchor: "middle",
+                                fontSize: "120%",
+                                fill: "black",
+                            }}
+                            position={"insideBottom"}
+                            offset={-10}
+                            value={"Week"} />
+                    </XAxis>
+                    <YAxis>
+                        <Label
+                            style={{
+                                textAnchor: "middle",
+                                fontSize: "120%",
+                                fill: "black",
+                            }}
+                            angle={270}
+                            position={"insideLeft"}
+                            offset={-33}
+                            value={"Total Shares Processed"} />
+                    </YAxis>
                     <Tooltip />
-                    <Legend />
+                    <Legend align={"right"}/>
                     <Bar dataKey="Buy" fill="#00ff00" />
                     <Bar dataKey="Sell" fill="#ff0000" />
                 </BarChart>
-            </Container>
+            </Container> }
 
             <Container className="d-flex justify-content-center align-items-center table-container">
                 <Table className="table table-bordered">
@@ -212,7 +234,7 @@ function App() {
                 </Table>
             </Container>
 
-            <Container className="d-flex justify-content-center align-items-center">
+            <Container className="page-container d-flex justify-content-center align-items-center">
                 <Button
                     className="bg-dark border-black"
                     disabled={currentPage === 1}

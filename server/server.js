@@ -15,10 +15,10 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 const sortMappings = {
-    "Date": "formatted_date",
-    "Ticker": "ticker_symbol",
-    "Value": "total_value",
-    "Shares": "shares"
+    "Date": "formatted_date DESC",
+    "Ticker": "ticker_symbol ASC",
+    "Value": "total_value DESC",
+    "Shares": "shares DESC"
 };
 
 app.get("/api", (req, res) => {
@@ -36,7 +36,7 @@ app.get('/transactions', async (req, res) => {
                 FROM transaction
             ) AS transactions
             WHERE formatted_date > '2024-06-13'
-            ORDER BY ${sortBy} DESC
+            ORDER BY ${sortBy}
         `);
         res.json(rows);
     } catch (error) {
@@ -70,7 +70,7 @@ app.get('/transactionSearch', async (req, res) => {
         query += ' AND transaction_type = "SELL"';
     }
 
-    query += ` ORDER BY ${sortBy} DESC`;
+    query += ` ORDER BY ${sortBy}`;
 
     try {
         const [rows] = await db.query(query, params);
